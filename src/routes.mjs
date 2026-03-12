@@ -73,6 +73,7 @@ let pages = {
   /* Proxy Presets */
   youtube: 'pages/proxnav/preset/youtube.html',
   apps: 'pages/proxnav/preset/applications.html',
+  services: 'pages/proxnav/preset/services.html',
   /* Misc */
   flash: 'archive/gfiles/flash/index.html',
   webretro: 'archive/gfiles/rarch/index.html',
@@ -120,6 +121,7 @@ let altPaths = {
   rammerhead: 'physics',
   youtube: 'wiki',
   apps: 'software',
+  services: 'hub',
   flash: 'whiteboard',
   webretro: 'notebook',
   'vibe-os': 'pencil',
