@@ -63,6 +63,37 @@ const storageId = '{{hu-lts}}-storage',
   storageObject = () => JSON.parse(localStorage.getItem(storageId)) || {},
   readStorage = (name) => storageObject()[name];
 
+const getS27Endpoint = () =>
+    (window.__HU_S27_ENDPOINT || localStorage.getItem('huS27Endpoint') || '').trim(),
+  sendS27Event = (eventName, payload = {}, useBeacon = false) => {
+    const endpoint = getS27Endpoint();
+    if (!endpoint) return;
+
+    const body = JSON.stringify({
+      event: eventName,
+      s27: localStorage.getItem('s27') || null,
+      timestamp: new Date().toISOString(),
+      ...payload,
+    });
+
+    if (useBeacon && navigator.sendBeacon) {
+      navigator.sendBeacon(
+        endpoint,
+        new Blob([body], { type: 'application/json' })
+      );
+      return;
+    }
+
+    fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+      keepalive: useBeacon,
+    }).catch(() => {});
+  };
+
 /* OMNIBOX */
 
 const searchEngines = Object.freeze({
@@ -796,6 +827,12 @@ const preparePage = async () => {
     if (goProx[type]) {
       element.addEventListener('click', (e) => {
         e.preventDefault();
+        sendS27Event('service_click', {
+          website: url,
+          proxyType: type,
+          proxyMode: mode,
+          serviceLabel: (element.textContent || '').trim(),
+        });
         goProx[type](url, mode);
       });
     }
