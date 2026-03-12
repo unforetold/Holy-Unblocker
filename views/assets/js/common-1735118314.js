@@ -782,6 +782,25 @@ const preparePage = async () => {
   prSet('pr-wa', 'wikipedia');
   prSet('pr-ng', 'newgrounds');
 
+  // Handle preset proxy buttons using the data-proxy-url attribute.
+  // Any element with data-proxy-url will open that URL through a proxy when
+  // clicked. Optionally use data-proxy-type (default: "scramjet") to choose
+  // the proxy and data-proxy-mode (default: "stealth") to choose the mode.
+  // Example usage on any page — no changes to common.js required:
+  //   <a href="#" class="fancybutton glowbutton" data-proxy-url="https://open.spotify.com">Spotify</a>
+  //   <a href="#" class="fancybutton glowbutton" data-proxy-url="https://youtube.com" data-proxy-type="scramjet" data-proxy-mode="stealth">YouTube</a>
+  document.querySelectorAll('[data-proxy-url]').forEach((element) => {
+    const url = element.getAttribute('data-proxy-url');
+    const type = element.getAttribute('data-proxy-type') || 'scramjet';
+    const mode = element.getAttribute('data-proxy-mode') || 'stealth';
+    if (goProx[type]) {
+      element.addEventListener('click', (e) => {
+        e.preventDefault();
+        goProx[type](url, mode);
+      });
+    }
+  });
+
   // Load the frame for stealth mode if it exists.
   const windowFrame = document.getElementById('frame'),
     loadFrame = () => {
