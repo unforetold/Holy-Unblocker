@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{mask}}{{Holy Unblocker LTS | Secure & Free Web Proxy Service}}</title>
+    {{ifSEO}}{{
+    <meta
+      name="description"
+      content="Holy Unblocker LTS is a cutting-edge web proxy service designed to bypass web filters and blockers. Whether dealing with client-side or network-based censorship, Holy Unblocker LTS provides seamless access to blocked sites and secure, private browsing on devices like Chromebooks. Overcome content blockers, Chrome extensions, firewalls, and more with our advanced proxy solution."
+    />
+    }}
+    <!--HEAD-CONTENT-->
+    <script src="{{route}}{{/scram/scramjet.all.js}}" defer data-module></script>
+    <script src="{{route}}{{/baremux/index.js}}" defer data-module></script>
+    {{inline}}{{
+    <script src="{{route}}{{/assets/js/register-sw.js}}{{inline}}" defer></script>
+    }}
+    <script src="https://unpkg.com/tsparticles@3.8.1/tsparticles.bundle.min.js" defer data-module></script>
+    <script src="https://unpkg.com/@popperjs/core@2" defer data-module></script>
+    <script src="https://unpkg.com/tippy.js@6" defer></script>
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
+  </head>
+
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div id="header" class="fullwidth">
+      <!--HEADER-->
+    </div>
+    <div id="background" class="fullwidth"></div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <div data-aos="fade-right" class="hero-grid-container">
+      <div class="box-hero">
+        <div class="hero-content">
+          <div class="proxy-header text-center" id="redirect-status">
+            <img
+              class="pr-logo"
+              src="{{route}}{{/assets/img/scramjet.webp}}"
+              alt="{{mask}}{{Scramjet Web Proxy}}"
+            />
+            <p id="redirect-msg">{{mask}}{{Initializing secure connection...}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="footer" class="fullwidth">
+      <!--FOOTER-->
+    </div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <script>
+      window.addEventListener('load', async () => {
+        const msgEl = document.getElementById('redirect-msg');
+        try {
+          // Target URL stored as base64 to avoid it appearing plaintext in source
+          const tgt = atob('aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbQ==');
+
+          const ctrl = self['$scramjetLoadController'];
+          if (!ctrl) throw new Error('Scramjet controller unavailable.');
+
+          const { ScramjetController } = await ctrl();
+          const sj = new ScramjetController({
+            prefix: '{{route}}{{/scram/network/}}',
+          });
+
+          if (msgEl) msgEl.textContent = '{{mask}}{{Establishing proxy tunnel...}}';
+
+          // Wait until the service worker is active before navigating
+          await navigator.serviceWorker.ready;
+
+          location.href = location.origin + sj.encodeUrl(tgt);
+        } catch (err) {
+          console.error('Auto-redirect failed:', err);
+          if (msgEl)
+            msgEl.textContent =
+              '{{mask}}{{Redirect failed. Please visit the proxy page manually.}}';
+        }
+      });
+    </script>
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/card.js}}{{inline}}"></script>
+    }}
+  </body>
+</html>
